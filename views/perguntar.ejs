@@ -1,23 +1,19 @@
-<%- include ('partials/header.ejs') %>
-<body>
-    <%- include ('partials/navbar.ejs') %>
-    <div class="container">
-        <div class="card" id="formulario-pergunta">
-            <div class="card-header">
-                <h3> Realizar perguntas </h3>
-            </div>
-            <div class="card-body">
-                <form method="post" action="/pergunta/salvar">
-                    <label> Título </label>
-                    <input type="text" placeholder="Título" class="form-control" name="titulo">
-                    <br>
-                    <label> Descrição </label>
-                    <textarea placeholder="Descreva a sua pergunta aqui" class="form-control" name="descricao"></textarea>
-                    <br>
-                    <button class="btn btn-success" type="submit">Perguntar</button>
-                </form>
-            </div>
-        </div>
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+  <h1 class="mt-5">Faça uma Pergunta</h1>
+  <form action="/pergunta/salvar" method="POST">
+    <div class="form-group">
+      <label for="title">Título</label>
+      <input type="text" class="form-control" id="title" name="title" required>
     </div>
-</body>
-<%- include ('partials/footer.ejs') %>
+    <div class="form-group">
+      <label for="question">Pergunta</label>
+      <textarea class="form-control" id="question" name="question" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

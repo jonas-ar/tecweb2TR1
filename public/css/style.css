@@ -1,7 +1,65 @@
-body{
-    background-color: #eceff1;
+body {
+  background-color: #eceff1;
 }
 
-#formulario-pergunta{
-    margin-top: 5vh;
+#formulario-pergunta {
+  margin-top: 5vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Arial', sans-serif;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+}
+
+.jumbotron {
+  background-image: url('/images/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 100px 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.jumbotron .display-4 {
+  font-weight: bold;
+}
+
+.jumbotron .lead {
+  font-size: 1.25rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+}
+
+.footer {
+  background-color: #343a40;
+  color: #fff;
+  padding: 20px 0;
+}
+
+.footer .text-muted {
+  color: #adb5bd !important;
+  display: block;
+  margin-left: 2rem;
 }

@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const session = require("express-session");
 const connection = require("./database/database");
 
 const perguntaRouter = require("./routes/pergunta");
+const respostaRouter = require("./routes/resposta");
+const usuarioRouter = require("./routes/usuario");
 const Pergunta = require("./database/Pergunta");
-const { where } = require("sequelize");
+const Usuario = require("./database/Usuario");
+const moment = require("moment");
 
 connection
   .authenticate()
@@ -22,22 +26,36 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", function (req, res) {
-  Pergunta.findAll({raw: true, order: [
-    ['id', 'DESC']
-  ]}).then(pergunta=> {
-    res.render("index", {
-      pergunta: pergunta
-    })
-  })
+app.use(session({
+  secret: "sua-chave-secreta",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Se a gente for usar Https, mudar pra true
+}));
+
+app.use((req, res, next) => {
+  res.locals.usuario = req.session.usuarioId;
+  res.locals.moment = moment;
+  next();
+});
+
+app.get("/", async function (req, res) {
+  const perguntas = await Pergunta.findAll({ raw: true, order: [['id', 'DESC']] });
+  res.render("index", { perguntas: perguntas });
 });
 
 app.get("/perguntar", function (req, res) {
-  res.render("perguntar");
+  if (req.session.usuarioId) {
+    res.render("perguntar");
+  } else {
+    res.redirect("/usuario/login");
+  }
 });
 
 app.use("/pergunta", perguntaRouter);
+app.use("/resposta", respostaRouter);
+app.use("/usuario", usuarioRouter);
 
 app.listen(4000, () => {
-  console.log("App rodando!");
+  console.log("App rodando na porta 4000!");
 });

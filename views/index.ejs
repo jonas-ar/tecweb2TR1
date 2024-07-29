@@ -1,19 +1,27 @@
-<%- include ('partials/header.ejs') %>
-    <body>
-        <%- include ('partials/navbar.ejs') %>
-        <h1 class="text-center">Bem-vindo ao guia de perguntas</h1>
-        <div class="container-fluid">
-            <% pergunta.forEach(pergunta => { %>
-            <br>
-                <div class="card">
-                    <div class="card-body">
-                        <h3><%= pergunta.titulo %></h3>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-primary">Responder</button>
-                    </div>
-                </div>
-            <% }) %>
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+  <div class="jumbotron mt-5 text-center" style="background-color: #628db8;">
+    <h1 class="display-4">Bem-vindo ao Guia de Perguntas</h1>
+    <p class="lead">Encontre respostas para suas perguntas ou faça uma nova pergunta!</p>
+    <hr class="my-4">
+    <p>Você pode ajudar nossa comunidade fazendo uma pergunta interessante.</p>
+    <a class="btn btn-primary btn-lg mt-5" href="/perguntar" role="button">Faça uma Pergunta</a>
+  </div>
+  <div class="container-fluid">
+    <% perguntas.forEach(pergunta => { %>
+    <br>
+        <div class="card">
+            <div class="card-body">
+                <h3><%= pergunta.titulo %></h3>
+            </div>
+            <div class="card-footer">
+                <a href="/pergunta/<%= pergunta.id %>" class="btn btn-primary" role="button">Responder</a>
+            </div>
         </div>
-    </body>
-<%- include ('partials/footer.ejs') %>
+    <% }) %>
+</div>
+</div>
+
+<%- include('partials/footer') %>
