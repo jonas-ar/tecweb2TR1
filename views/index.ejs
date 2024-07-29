@@ -1,21 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> Guia de Perguntas </title>
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-    </head>
-
+<%- include ('partials/header.ejs') %>
     <body>
-        <header>
-            <h1> Bem-vindo ao Guia de Perguntas </h1>
-        </header>
-
-        <main>
-            <!--escrever aqui o código bootstrap para criar os cards com título e resposta da pergunta a ser cadastrada no banco de dados-->
-        </main>
-
+        <%- include ('partials/navbar.ejs') %>
+        <h1 class="text-center">Bem-vindo ao guia de perguntas</h1>
+        <div class="container-fluid">
+            <% pergunta.forEach(pergunta => { %>
+            <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h3><%= pergunta.titulo %></h3>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">Responder</button>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
     </body>
-<%- include ('../public/partials/footer.ejs') %>
+<%- include ('partials/footer.ejs') %>
