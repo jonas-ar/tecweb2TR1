@@ -1,5 +1,16 @@
 # Primeiro trabalho de Tecnologias Web 2
 
+## Execução do programa
+```
+  npm install
+```
+
+
+> [!NOTE]  
+> Alterar os dados no arquivo database.js
+>
+> Utilizar o nodemon
+
 ## Autores
 <table>
   <tr>
