@@ -14,6 +14,24 @@ router.get("/:id", async (req, res) => {
     : res.status(404).send("Pergunta não encontrada");
 });
 
+// metodo GET para READ (todas as perguntas)
+router.get("/", (req, res) => {
+  res.render("index");
+});
+
+// metodo POST para CREATE (salvar perguntas)
+router.post("/", (req, res) => {
+  let titulo = req.body.titulo;
+  let descricao = req.body.descricao;
+
+  Pergunta.create({
+    titulo: titulo,
+    descricao: descricao,
+  });
+
+  res.send("Pergunta salva com sucesso!");
+});
+
 // metodo PUT para UPDATE (editar perguntas)
 router.put("/", (req, res) => {
   res.send("NAO IMPLEMENTADO");
@@ -24,10 +42,20 @@ router.delete("/", (req, res) => {
   res.send("NAO IMPLEMENTADO");
 });
 
-/// método get para a seção de perguntas
 router.get("/", (req, res) => {
   res.render("perguntar");
 });
 
+router.post("/salvar", (req, res) => {
+  var titulo = req.body.titulo;
+  var descricao = req.body.descricao;
+
+  Pergunta.create({
+    titulo: titulo,
+    descricao: descricao
+  }).then(()=> {
+    res.redirect('/');
+  })
+});
 
 module.exports = router;
