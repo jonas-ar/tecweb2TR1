@@ -32,20 +32,11 @@ app.get("/", function (req, res) {
   })
 });
 
-// metodo POST para CREATE (salvar perguntas)
-app.post("/salvarpergunta", (req, res) => {
-  var titulo = req.body.titulo;
-  var descricao = req.body.descricao;
-
-  Pergunta.create({
-    titulo: titulo,
-    descricao: descricao
-  }).then(()=> {
-    res.redirect('/');
-  })
+app.get("/perguntar", function (req, res) {
+  res.render("perguntar");
 });
 
-app.use("/perguntar", perguntaRouter);
+app.use("/pergunta", perguntaRouter);
 
 app.listen(4000, () => {
   console.log("App rodando!");
