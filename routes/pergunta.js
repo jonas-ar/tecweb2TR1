@@ -19,19 +19,6 @@ router.get("/", (req, res) => {
   res.render("index");
 });
 
-// metodo POST para CREATE (salvar perguntas)
-router.post("/", (req, res) => {
-  let titulo = req.body.titulo;
-  let descricao = req.body.descricao;
-
-  Pergunta.create({
-    titulo: titulo,
-    descricao: descricao,
-  });
-
-  res.send("Pergunta salva com sucesso!");
-});
-
 // metodo PUT para UPDATE (editar perguntas)
 router.put("/", (req, res) => {
   res.send("NAO IMPLEMENTADO");
