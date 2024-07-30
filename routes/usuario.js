@@ -3,17 +3,17 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const Usuario = require("../database/Usuario");
 
-// página de registro
+// Página de registro
 router.get("/registrar", (req, res) => {
   res.render("registrar");
 });
 
-// página de login
+// Página de login
 router.get("/login", (req, res) => {
   res.render("login");
 });
 
-// criar um novo usuário
+// Criar um novo usuário
 router.post("/registrar", async (req, res) => {
   const { nome, email, senha } = req.body;
   const salt = bcrypt.genSaltSync(10);
@@ -27,7 +27,7 @@ router.post("/registrar", async (req, res) => {
   }
 });
 
-// login do usuário
+// Login do usuário
 router.post("/login", async (req, res) => {
   const { email, senha } = req.body;
 
@@ -45,7 +45,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// logout do usuário
+// Logout do usuário
 router.get("/logout", (req, res) => {
   req.session.destroy();
   res.redirect("/");

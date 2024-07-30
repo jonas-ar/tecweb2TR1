@@ -63,3 +63,17 @@ h6 {
   display: block;
   margin-left: 2rem;
 }
+
+.navbar-nav .nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-text {
+  margin-right: 15px;
+  font-size: 16px;
+}
+
+.navbar-nav .nav-item .nav-link {
+  font-size: 16px;
+}

@@ -30,11 +30,16 @@ app.use(session({
   secret: "sua-chave-secreta",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Se a gente for usar Https, mudar pra true
+  cookie: { secure: false } // Use true se estiver usando HTTPS
 }));
 
-app.use((req, res, next) => {
-  res.locals.usuario = req.session.usuarioId;
+app.use(async (req, res, next) => {
+  if (req.session.usuarioId) {
+    const usuario = await Usuario.findByPk(req.session.usuarioId);
+    res.locals.usuario = usuario ? { id: usuario.id, nome: usuario.nome } : null;
+  } else {
+    res.locals.usuario = null;
+  }
   res.locals.moment = moment;
   next();
 });
