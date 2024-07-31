@@ -4,6 +4,7 @@ const Pergunta = require("../database/Pergunta");
 const Resposta = require("../database/Resposta");
 const Usuario = require("../database/Usuario");
 const moment = require("moment");
+const { sequelize } = require("../database/database"); // Certifique-se de que isso está correto
 
 // método GET para listar todas as perguntas do usuário logado
 router.get("/minhas", async (req, res) => {
@@ -93,16 +94,45 @@ router.get("/", async (req, res) => {
   }
 });
 
-// método PUT para UPDATE (editar perguntas)
-router.put("/:id", async (req, res) => {
+// método GET para EDITAR perguntas
+router.get("/editar/:id", async (req, res) => {
+  if (!req.session.usuarioId) {
+    return res.redirect("/usuario/login");
+  }
+
   try {
     let pergunta = await Pergunta.findOne({
       where: { id: req.params.id, usuarioId: req.session.usuarioId },
     });
 
     if (pergunta) {
-      await Pergunta.update(req.body, { where: { id: req.params.id } });
-      res.send("Pergunta atualizada com sucesso");
+      res.render("editarPergunta", { pergunta: pergunta });
+    } else {
+      res.status(404).send("Pergunta não encontrada ou você não tem permissão para editá-la");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao buscar pergunta");
+  }
+});
+
+// método POST para EDITAR perguntas
+router.post("/editar/:id", async (req, res) => {
+  if (!req.session.usuarioId) {
+    return res.redirect("/usuario/login");
+  }
+
+  try {
+    let pergunta = await Pergunta.findOne({
+      where: { id: req.params.id, usuarioId: req.session.usuarioId },
+    });
+
+    if (pergunta) {
+      await Pergunta.update(
+        { titulo: req.body.titulo, descricao: req.body.descricao },
+        { where: { id: req.params.id } }
+      );
+      res.redirect("/pergunta/minhas");
     } else {
       res.status(404).send("Pergunta não encontrada ou você não tem permissão para editá-la");
     }
