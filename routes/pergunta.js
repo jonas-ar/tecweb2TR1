@@ -5,7 +5,32 @@ const Resposta = require("../database/Resposta");
 const Usuario = require("../database/Usuario");
 const moment = require("moment");
 
-// listar todas as perguntas com detalhes
+// método GET para listar todas as perguntas do usuário logado
+router.get("/minhas", async (req, res) => {
+  if (!req.session.usuarioId) {
+    return res.redirect("/usuario/login");
+  }
+
+  try {
+    let perguntas = await Pergunta.findAll({
+      where: { usuarioId: req.session.usuarioId },
+      include: [Usuario],
+      order: [['createdAt', 'DESC']]
+    });
+
+    perguntas = perguntas.map(pergunta => ({
+      ...pergunta.dataValues,
+      tempo: moment(pergunta.createdAt).fromNow()
+    }));
+
+    res.render("minhasPerguntas", { perguntas: perguntas });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao listar perguntas");
+  }
+});
+
+// método GET para listar todas as perguntas com detalhes
 router.get("/listar", async (req, res) => {
   try {
     let perguntas = await Pergunta.findAll({
@@ -25,20 +50,7 @@ router.get("/listar", async (req, res) => {
   }
 });
 
-// ler todas as perguntas
-router.get("/", async (req, res) => {
-  try {
-    let perguntas = await Pergunta.findAll({
-      include: [Usuario],
-    });
-    res.render("index", { perguntas: perguntas });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erro ao listar perguntas");
-  }
-});
-
-// ler pergunta específica
+// método GET para READ (pergunta específica)
 router.get("/:id", async (req, res) => {
   try {
     let pergunta = await Pergunta.findOne({
@@ -68,8 +80,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// método GET para READ (todas as perguntas)
+router.get("/", async (req, res) => {
+  try {
+    let perguntas = await Pergunta.findAll({
+      include: [Usuario],
+    });
+    res.render("index", { perguntas: perguntas });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao listar perguntas");
+  }
+});
 
-// editar perguntas
+// método PUT para UPDATE (editar perguntas)
 router.put("/:id", async (req, res) => {
   try {
     let pergunta = await Pergunta.findOne({
@@ -88,16 +112,27 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// deletar perguntas
-router.delete("/:id", async (req, res) => {
+// método POST para deletar pergunta
+router.post("/deletar/:id", async (req, res) => {
+  if (!req.session.usuarioId) {
+    return res.redirect("/usuario/login");
+  }
+
   try {
     let pergunta = await Pergunta.findOne({
       where: { id: req.params.id, usuarioId: req.session.usuarioId },
     });
 
     if (pergunta) {
-      await Pergunta.destroy({ where: { id: req.params.id } });
-      res.send("Pergunta deletada com sucesso");
+      await Resposta.destroy({
+        where: { perguntaId: req.params.id }
+      });
+
+      await Pergunta.destroy({
+        where: { id: req.params.id }
+      });
+
+      res.redirect("/pergunta/minhas");
     } else {
       res.status(404).send("Pergunta não encontrada ou você não tem permissão para deletá-la");
     }

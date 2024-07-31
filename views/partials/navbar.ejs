@@ -13,13 +13,18 @@
             <li class="nav-item">
                 <a class="nav-link" href="/pergunta/listar">Listar Perguntas</a>
             </li>
+            <% if (usuario) { %>
+            <li class="nav-item">
+                <a class="nav-link" href="/pergunta/minhas">Minhas Perguntas</a>
+            </li>
+            <% } %>
         </ul>
         <ul class="navbar-nav ml-auto align-items-center">
             <% if (usuario) { 
                 const primeiroNome = usuario.nome.split(' ')[0];
             %>
                 <li class="nav-item">
-                    <span class="navbar-text text-white ">Bem-vindo, <%= primeiroNome %>!</span>
+                    <span class="navbar-text text-white">Bem-vindo, <%= primeiroNome %>!</span>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/usuario/logout">Sair</a>
