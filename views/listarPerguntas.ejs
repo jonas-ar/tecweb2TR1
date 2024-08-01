@@ -2,7 +2,46 @@
 <%- include('partials/navbar') %>
 
 <div class="container">
-  <h1 class="mt-5">Todas as Perguntas</h1>
+  <h1 class="mt-5">Listar Perguntas</h1>
+  
+  <!-- Formulário de busca avançada -->
+  <form class="mb-5" action="/pergunta/listar" method="GET">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="titulo">Título</label>
+          <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Buscar por título" value="<%= titulo %>">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="descricao">Descrição</label>
+          <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Buscar por descrição" value="<%= descricao %>">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="usuario">Usuário</label>
+          <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Buscar por usuário" value="<%= usuario %>">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="tempo">Tempo</label>
+          <select class="form-control" id="tempo" name="tempo">
+            <option value="">Selecione...</option>
+            <option value="uma_hora">Última hora</option>
+            <option value="um_dia">Último dia</option>
+            <option value="uma_semana">Última semana</option>
+            <option value="um_mes">Último mês</option>
+            <option value="um_ano">Último ano</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+  </form>
+
   <div class="container-fluid">
     <% perguntas.forEach(pergunta => { %>
     <br>

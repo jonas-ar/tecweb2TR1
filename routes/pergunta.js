@@ -4,6 +4,7 @@ const Pergunta = require("../database/Pergunta");
 const Resposta = require("../database/Resposta");
 const Usuario = require("../database/Usuario");
 const moment = require("moment");
+const { Op } = require("sequelize"); // Adicione isto para usar operadores do Sequelize
 
 // método GET para listar todas as perguntas do usuário logado
 router.get("/minhas", async (req, res) => {
@@ -31,11 +32,53 @@ router.get("/minhas", async (req, res) => {
   }
 });
 
-// método GET para listar todas as perguntas com detalhes
+// método GET para listar todas as perguntas com detalhes e filtros
 router.get("/listar", async (req, res) => {
+  const { titulo, descricao, usuario, tempo } = req.query;
+
   try {
+    let whereClause = {};
+    let includeClause = [{ model: Usuario }];
+    let timeFilter;
+
+    if (titulo) {
+      whereClause.titulo = { [Op.like]: `%${titulo}%` };
+    }
+    if (descricao) {
+      whereClause.descricao = { [Op.like]: `%${descricao}%` };
+    }
+    if (usuario) {
+      includeClause[0].where = { nome: { [Op.like]: `%${usuario}%` } };
+    }
+    if (tempo) {
+      const now = moment();
+      switch (tempo) {
+        case "uma_hora":
+          timeFilter = now.subtract(1, "hours");
+          break;
+        case "um_dia":
+          timeFilter = now.subtract(1, "days");
+          break;
+        case "uma_semana":
+          timeFilter = now.subtract(1, "weeks");
+          break;
+        case "um_mes":
+          timeFilter = now.subtract(1, "months");
+          break;
+        case "um_ano":
+          timeFilter = now.subtract(1, "years");
+          break;
+        default:
+          timeFilter = null;
+      }
+      if (timeFilter) {
+        whereClause.createdAt = { [Op.gte]: timeFilter.toDate() };
+      }
+    }
+
     let perguntas = await Pergunta.findAll({
-      include: [Usuario],
+      where: whereClause,
+      include: includeClause,
       order: [['createdAt', 'DESC']]
     });
 
@@ -44,7 +87,7 @@ router.get("/listar", async (req, res) => {
       tempo: moment(pergunta.createdAt).fromNow()
     }));
 
-    res.render("listarPerguntas", { perguntas: perguntas });
+    res.render("listarPerguntas", { perguntas: perguntas, titulo, descricao, usuario, tempo });
   } catch (err) {
     console.error(err);
     req.flash('error_msg', 'Erro ao listar perguntas.');
@@ -208,7 +251,5 @@ router.post("/salvar", async (req, res) => {
     res.redirect("/usuario/login");
   }
 });
-
-
 
 module.exports = router;
