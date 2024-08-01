@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const flash = require("connect-flash");
 const connection = require("./database/database");
 
 const perguntaRouter = require("./routes/pergunta");
@@ -32,6 +33,14 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false } // Use true se estiver usando HTTPS
 }));
+
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
 
 app.use(async (req, res, next) => {
   if (req.session.usuarioId) {

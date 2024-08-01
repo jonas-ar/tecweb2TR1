@@ -38,3 +38,29 @@
     </div>
   </nav>
   
+  <% if (success_msg.length > 0) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= success_msg %>
+    </div>
+  <% } %>
+  
+  <% if (error_msg.length > 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= error_msg %>
+    </div>
+  <% } %>
+  
+  <script>
+    // Função para ocultar alertas após 5 segundos
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+          alert.classList.remove('show');
+          alert.classList.add('fade');
+          setTimeout(() => alert.classList.add('d-none'), 1000); // Adiciona classe d-none após a transição de fade
+        });
+      }, 1500); // 1500ms = 1.5 segundos
+    });
+  </script>
+  

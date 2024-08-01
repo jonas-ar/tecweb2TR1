@@ -4,7 +4,6 @@ const Pergunta = require("../database/Pergunta");
 const Resposta = require("../database/Resposta");
 const Usuario = require("../database/Usuario");
 const moment = require("moment");
-const { sequelize } = require("../database/database"); // Certifique-se de que isso está correto
 
 // método GET para listar todas as perguntas do usuário logado
 router.get("/minhas", async (req, res) => {
@@ -27,7 +26,8 @@ router.get("/minhas", async (req, res) => {
     res.render("minhasPerguntas", { perguntas: perguntas });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Erro ao listar perguntas");
+    req.flash('error_msg', 'Erro ao listar perguntas.');
+    res.redirect("/");
   }
 });
 
@@ -47,7 +47,8 @@ router.get("/listar", async (req, res) => {
     res.render("listarPerguntas", { perguntas: perguntas });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Erro ao listar perguntas");
+    req.flash('error_msg', 'Erro ao listar perguntas.');
+    res.redirect("/");
   }
 });
 
@@ -73,11 +74,13 @@ router.get("/:id", async (req, res) => {
 
       res.render("resposta", { pergunta, respostas });
     } else {
-      res.status(404).send("Pergunta não encontrada");
+      req.flash('error_msg', 'Pergunta não encontrada.');
+      res.redirect("/");
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send("Erro ao buscar pergunta");
+    req.flash('error_msg', 'Erro ao buscar pergunta.');
+    res.redirect("/");
   }
 });
 
@@ -90,7 +93,8 @@ router.get("/", async (req, res) => {
     res.render("index", { perguntas: perguntas });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Erro ao listar perguntas");
+    req.flash('error_msg', 'Erro ao listar perguntas.');
+    res.redirect("/");
   }
 });
 
@@ -108,11 +112,13 @@ router.get("/editar/:id", async (req, res) => {
     if (pergunta) {
       res.render("editarPergunta", { pergunta: pergunta });
     } else {
-      res.status(404).send("Pergunta não encontrada ou você não tem permissão para editá-la");
+      req.flash('error_msg', 'Pergunta não encontrada ou você não tem permissão para editá-la.');
+      res.redirect("/pergunta/minhas");
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send("Erro ao buscar pergunta");
+    req.flash('error_msg', 'Erro ao buscar pergunta.');
+    res.redirect("/pergunta/minhas");
   }
 });
 
@@ -132,13 +138,16 @@ router.post("/editar/:id", async (req, res) => {
         { titulo: req.body.titulo, descricao: req.body.descricao },
         { where: { id: req.params.id } }
       );
+      req.flash('success_msg', 'Pergunta atualizada com sucesso.');
       res.redirect("/pergunta/minhas");
     } else {
-      res.status(404).send("Pergunta não encontrada ou você não tem permissão para editá-la");
+      req.flash('error_msg', 'Pergunta não encontrada ou você não tem permissão para editá-la.');
+      res.redirect("/pergunta/minhas");
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send("Erro ao atualizar pergunta");
+    req.flash('error_msg', 'Erro ao atualizar pergunta.');
+    res.redirect("/pergunta/minhas");
   }
 });
 
@@ -162,13 +171,16 @@ router.post("/deletar/:id", async (req, res) => {
         where: { id: req.params.id }
       });
 
+      req.flash('success_msg', 'Pergunta deletada com sucesso.');
       res.redirect("/pergunta/minhas");
     } else {
-      res.status(404).send("Pergunta não encontrada ou você não tem permissão para deletá-la");
+      req.flash('error_msg', 'Pergunta não encontrada ou você não tem permissão para deletá-la.');
+      res.redirect("/pergunta/minhas");
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send("Erro ao deletar pergunta");
+    req.flash('error_msg', 'Erro ao deletar pergunta.');
+    res.redirect("/pergunta/minhas");
   }
 });
 
@@ -184,14 +196,19 @@ router.post("/salvar", async (req, res) => {
         descricao: question,
         usuarioId: usuarioId,
       });
+      req.flash('success_msg', 'Pergunta criada com sucesso.');
       res.redirect('/');
     } catch (err) {
       console.error(err);
-      res.status(500).send("Erro ao salvar a pergunta");
+      req.flash('error_msg', 'Erro ao salvar a pergunta.');
+      res.redirect('/');
     }
   } else {
-    res.status(401).send("Você precisa estar logado para fazer uma pergunta");
+    req.flash('error_msg', 'Você precisa estar logado para fazer uma pergunta.');
+    res.redirect("/usuario/login");
   }
 });
+
+
 
 module.exports = router;
