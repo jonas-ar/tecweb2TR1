@@ -20,8 +20,8 @@
             <% } %>
         </ul>
         <ul class="navbar-nav ml-auto align-items-center">
-            <% if (usuario) { 
-                const primeiroNome = usuario.nome.split(' ')[0];
+            <% if (usuario) {
+                const primeiroNome = usuario.nome;
             %>
                 <li class="nav-item">
                     <span class="navbar-text text-white">Bem-vindo, <%= primeiroNome %>!</span>
