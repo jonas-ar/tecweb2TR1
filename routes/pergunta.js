@@ -87,7 +87,12 @@ router.get("/listar", async (req, res) => {
       tempo: moment(pergunta.createdAt).fromNow()
     }));
 
-    res.render("listarPerguntas", { perguntas: perguntas, titulo, descricao, usuario, tempo });
+    res.render("listarPerguntas", { 
+      perguntas: perguntas, 
+      titulo, 
+      descricao, 
+      usuario: res.locals.usuario, 
+      tempo });
   } catch (err) {
     console.error(err);
     req.flash('error_msg', 'Erro ao listar perguntas.');
